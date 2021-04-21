@@ -27,6 +27,16 @@
               <v-list-item-title>About</v-list-item-title></router-link
             >
           </v-list-item>
+          <v-spacer></v-spacer>
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>mdi-account-multiple</v-icon>
+            </v-list-item-icon>
+
+            <router-link :to="{ name: 'Quiz' }">
+              <v-list-item-title>Quiz</v-list-item-title></router-link
+            >
+          </v-list-item>
         </v-list>
       </v-navigation-drawer>
     </v-card>
