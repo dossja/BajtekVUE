@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <HelloWorld msg="Welcome to Your Home Page" />
+    <div id="data1">Another text</div>
   </div>
 </template>
 
@@ -15,3 +16,9 @@ export default {
   },
 };
 </script>
+
+<style>
+#data1 {
+  background: #212121;
+}
+</style>
