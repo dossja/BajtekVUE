@@ -4,6 +4,15 @@
 
     <v-row class="text-center">
       <v-col class="mb-4">
+        <div class="box-score pa-6" v-if="score_show">
+          <h2>Your score is</h2>
+          <h2>{{ score }}/{{ questions.length }}</h2>
+          <div class="btn-restart pa-6">
+            <v-btn depressed color="error" @click="restartQuiz">
+              Restart
+            </v-btn>
+          </div>
+        </div>
         <div
           class="box"
           v-for="(question, index) in questions.slice(a, b)"
@@ -19,10 +28,13 @@
             </h3>
           </div>
           <div class="box-propositions">
-            <v-list-item-group v-model="selectedItem" color="primary">
+            <v-list-item-group v-model="selectedItem">
               <v-list-item
                 v-for="(proposition, index) in question.propositions"
                 :key="index"
+                @click="selectResponse(proposition, index)"
+                :class="correct ? check(proposition) : ''"
+                :disabled="!next"
               >
                 <v-list-item-content>
                   <v-list-item-title
@@ -31,6 +43,25 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
+          </div>
+
+          <div class="footer-quiz pa-6">
+            <div v-if="progress < 100" class="box-button">
+              <v-btn
+                color="secondary"
+                elevation="2"
+                @click="skipQuestion()"
+                :disabled="!next"
+                >Skip</v-btn
+              >
+              <v-btn
+                color="primary"
+                elevation="2"
+                @click="nextQuestion()"
+                :disabled="next"
+                >Next</v-btn
+              >
+            </div>
           </div>
         </div>
       </v-col>
@@ -121,6 +152,47 @@ export default {
       if (e.correct) {
         this.score++;
       }
+    },
+    check(status) {
+      if (status.correct) {
+        return "correct";
+      } else {
+        return "incorrect";
+      }
+    },
+    nextQuestion() {
+      if (this.next) {
+        return;
+      }
+      this.progress = this.progress + 100 / this.questions.length;
+      if (this.questions.length - 1 == this.a) {
+        this.score_show = true;
+        this.quiz = false;
+      } else {
+        this.a++;
+        this.b++;
+        this.correct = false;
+        this.next = true;
+      }
+    },
+    skipQuestion() {
+      if (!this.next) {
+        return;
+      }
+      this.progress = this.progress + 100 / this.questions.length;
+
+      if (this.questions.length - 1 == this.a) {
+        this.score_show = true;
+        this.quiz = false;
+        console.log(this.score_show);
+      } else {
+        this.a++;
+        this.b++;
+      }
+    },
+
+    restartQuiz() {
+      Object.assign(this.$data, this.$options.data()); // reset data in vue
     },
   },
 };
